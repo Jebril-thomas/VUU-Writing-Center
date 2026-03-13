@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit a Draft | VUU Writing Center</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="sep">/</span>
+        <span class="current">Submit a Draft</span>
+      </div>
+      <span class="eyebrow">Asynchronous Review</span>
+      <h1>Submit Your Draft</h1>
+      <p>Upload your paper and receive detailed written feedback within 48 business hours.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="submit-layout">
+
+      <!-- SIDEBAR -->
+      <div>
+        <div class="reveal">
+          <span class="eyebrow">Before You Submit</span>
+          <h3 style="margin:0.5rem 0 1.75rem">What to Expect</h3>
+          <div class="sidebar-steps">
+            <div class="sidebar-step">
+              <div class="ss-num">1</div>
+              <div class="ss-body">
+                <h4>Submit Your Draft</h4>
+                <p>Fill out the form and upload your paper. Accepted formats: .docx, .pdf, .txt</p>
+              </div>
+            </div>
+            <div class="sidebar-step">
+              <div class="ss-num">2</div>
+              <div class="ss-body">
+                <h4>Consultant Reviews</h4>
+                <p>A trained writing consultant reads your draft and prepares detailed written comments.</p>
+              </div>
+            </div>
+            <div class="sidebar-step">
+              <div class="ss-num">3</div>
+              <div class="ss-body">
+                <h4>Receive Feedback</h4>
+                <p>Your annotated draft and feedback letter are emailed to your VUU address within 48 business hours.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="guidelines-box reveal">
+          <h4>Submission Guidelines</h4>
+          <ul>
+            <li>Maximum file size: 10 MB</li>
+            <li>Formats: .docx, .pdf, .txt</li>
+            <li>Maximum length: 20 pages</li>
+            <li>Include assignment prompt if possible</li>
+            <li>Submissions after 5 PM are reviewed next business day</li>
+          </ul>
+        </div>
+
+        <div class="reveal" style="margin-top:1.5rem">
+          <h4 style="font-size:0.95rem;margin-bottom:0.5rem">Prefer a Live Session?</h4>
+          <p style="font-family:'Outfit',sans-serif;font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">For immediate feedback, schedule an in-person or virtual appointment instead.</p>
+          <a href="appointments.html" class="btn btn-outline btn-sm">Book an Appointment →</a>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div class="reveal">
+        <div class="form-card">
+          <h3 style="margin-bottom:0.4rem">Draft Submission Form</h3>
+          <p style="font-family:'Outfit',sans-serif;font-size:0.9rem;color:var(--text-muted);margin-bottom:2rem">Fields marked <span style="color:#DC2626">*</span> are required. Your submission is confidential.</p>
+
+          <form id="draftForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Full Name <span class="req">*</span></label>
+                <input type="text" id="df-name" class="form-control" placeholder="Your full name" required />
+              </div>
+              <div class="form-group">
+                <label>VUU Email <span class="req">*</span></label>
+                <input type="email" id="df-email" class="form-control" placeholder="yourname@vuu.edu" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Course Name / Number <span class="req">*</span></label>
+                <input type="text" id="df-course" class="form-control" placeholder="e.g., ENGL 101" required />
+              </div>
+              <div class="form-group">
+                <label>Instructor's Name <span class="req">*</span></label>
+                <input type="text" id="df-instructor" class="form-control" placeholder="Professor's full name" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Type of Assignment <span class="req">*</span></label>
+              <select id="df-type" class="form-control" required>
+                <option value="">Select assignment type</option>
+                <option>Argumentative Essay</option>
+                <option>Research Paper</option>
+                <option>Literary Analysis</option>
+                <option>Lab Report / Scientific Writing</option>
+                <option>Personal Statement</option>
+                <option>Business / Professional Writing</option>
+                <option>Creative Writing</option>
+                <option>Thesis / Dissertation Chapter</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Citation Style Required</label>
+              <select class="form-control">
+                <option value="">Select citation style (if applicable)</option>
+                <option>MLA 9th Edition</option>
+                <option>APA 7th Edition</option>
+                <option>Chicago / Turabian</option>
+                <option>Not required / None</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Upload Your Draft <span class="req">*</span></label>
+              <div class="file-drop" id="fileDrop">
+                <svg width="40" height="40" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p class="fd-title">Click to upload or drag &amp; drop</p>
+                <p class="fd-sub">.docx, .pdf, .txt · Max 10 MB · Max 20 pages</p>
+                <div class="file-name" id="fileName" style="display:none"></div>
+              </div>
+              <input type="file" id="fileInput" accept=".docx,.pdf,.txt" style="display:none" />
+              <div id="df-file-error" style="display:none;font-family:'Outfit',sans-serif;font-size:0.75rem;color:#DC2626;margin-top:0.4rem">⚠ Please attach your draft file.</div>
+            </div>
+
+            <div class="form-group">
+              <label>Questions / Comments for Your Tutor</label>
+              <textarea class="form-control" id="commentsField" placeholder="Tell us what kind of feedback would be most helpful. Do you have concerns about your thesis, argument, citations, or clarity?" maxlength="600"></textarea>
+              <div class="char-count"><span id="charCount">0</span> / 600</div>
+            </div>
+
+            <div class="form-group">
+              <label>Assignment Prompt <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+              <textarea class="form-control" placeholder="Paste your instructor's assignment prompt here to help your tutor understand the requirements." style="min-height:100px"></textarea>
+            </div>
+
+            <div id="draftFormError" style="display:none;font-family:'Outfit',sans-serif;font-size:0.82rem;color:#DC2626;margin-bottom:1rem;padding:0.75rem 1rem;background:#FEF2F2;border-radius:8px;border:1px solid #FECACA">
+              ⚠ Please fill in all required fields and attach your draft.
+            </div>
+
+            <div class="form-footer">
+              <p>By submitting, you confirm this is your own work and agree to receive feedback at your VUU email address.</p>
+              <button type="submit" class="btn btn-gold btn-lg" style="width:100%">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                Submit Draft for Review
+              </button>
+            </div>
+          </form>
+
+          <div class="success-box" id="successBox" style="display:none">
+            <svg width="48" height="48" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+            <h3>Draft Submitted!</h3>
+            <p>Your draft has been received. Expect detailed feedback at your VUU email within <strong>48 business hours</strong>.</p>
+            <p style="margin-top:0.5rem">Questions? Email <a href="/cdn-cgi/l/email-protection#3c4b4e554855525b5f595248594e7c4a494912595849" style="color:#047857;font-weight:600"><span class="__cf_email__" data-cfemail="a3d4d1cad7cacdc4c0c6cdd7c6d1e3d5d6d68dc6c7d6">[email&#160;protected]</span></a></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  var fileInput    = document.getElementById('fileInput');
+  var fileDrop     = document.getElementById('fileDrop');
+  var fileName     = document.getElementById('fileName');
+
+  /* ── File picker click ─────────────────────── */
+  fileDrop.addEventListener('click', function() { fileInput.click(); });
+
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
+  });
+
+  function handleFile(f) {
+    var allowed = ['.docx','.pdf','.txt'];
+    var ext = f.name.slice(f.name.lastIndexOf('.')).toLowerCase();
+    if (!allowed.includes(ext)) { showFileErr('Please upload a .docx, .pdf, or .txt file.'); return; }
+    if (f.size > 10 * 1024 * 1024) { showFileErr('File is too large. Maximum size is 10 MB.'); return; }
+    fileName.textContent = '\u2713 ' + f.name;
+    fileName.style.display = 'block';
+    fileDrop.style.borderColor = 'var(--gold)';
+    fileDrop.style.background  = 'var(--gold-faint)';
+    document.getElementById('df-file-error').style.display = 'none';
+  }
+  function showFileErr(msg) {
+    var el = document.getElementById('df-file-error');
+    el.textContent = '\u26A0 ' + msg;
+    el.style.display = 'block';
+    fileInput.value = '';
+    fileName.style.display = 'none';
+    fileDrop.style.borderColor = '';
+    fileDrop.style.background  = '';
+  }
+
+  /* ── Drag and drop ─────────────────────────── */
+  ['dragover','dragenter'].forEach(function(evt) {
+    fileDrop.addEventListener(evt, function(e) { e.preventDefault(); fileDrop.classList.add('dragging'); });
+  });
+  ['dragleave','dragend'].forEach(function(evt) {
+    fileDrop.addEventListener(evt, function() { fileDrop.classList.remove('dragging'); });
+  });
+  fileDrop.addEventListener('drop', function(e) {
+    e.preventDefault(); fileDrop.classList.remove('dragging');
+    if (e.dataTransfer.files.length) {
+      var f = e.dataTransfer.files[0];
+      try { var dt = new DataTransfer(); dt.items.add(f); fileInput.files = dt.files; } catch(err){}
+      handleFile(f);
+    }
+  });
+
+  /* ── Character counter ─────────────────────── */
+  var textarea  = document.getElementById('commentsField');
+  var charCount = document.getElementById('charCount');
+  textarea.addEventListener('input', function() { charCount.textContent = textarea.value.length; });
+
+  /* ── Form submit → POST /api/drafts ─────────── */
+  var API_BASE = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
+    ? 'http://localhost:3001'
+    : window.location.origin;
+
+  document.getElementById('draftForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var name       = document.getElementById('df-name').value.trim();
+    var email      = document.getElementById('df-email').value.trim();
+    var course     = document.getElementById('df-course').value.trim();
+    var instructor = document.getElementById('df-instructor').value.trim();
+    var type       = document.getElementById('df-type').value;
+    var citation   = document.querySelector('#draftForm select:nth-of-type(2)').value;
+    var comments   = document.getElementById('commentsField').value.trim();
+    var prompt     = document.querySelector('#draftForm textarea:last-of-type').value.trim();
+    var hasFile    = fileInput.files.length > 0;
+    var errEl      = document.getElementById('draftFormError');
+    var fileErrEl  = document.getElementById('df-file-error');
+
+    /* Client-side validation */
+    var valid = name && email && email.includes('@') && course && instructor && type && hasFile;
+    if (!valid) {
+      errEl.style.display = 'block';
+      if (!hasFile) fileErrEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    fileErrEl.style.display = 'none';
+
+    /* Build FormData */
+    var fd = new FormData();
+    fd.append('student_name',      name);
+    fd.append('student_email',     email);
+    fd.append('course',            course);
+    fd.append('instructor',        instructor);
+    fd.append('assignment_type',   type);
+    fd.append('citation_style',    citation);
+    fd.append('tutor_comments',    comments);
+    fd.append('assignment_prompt', prompt);
+    fd.append('draft_file',        fileInput.files[0]);
+
+    /* Disable button + show spinner */
+    var submitBtn = document.querySelector('#draftForm button[type="submit"]');
+    var origHtml  = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<svg style="animation:spin .65s linear infinite;width:18px;height:18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Submitting…';
+
+    try {
+      var resp = await fetch(API_BASE + '/api/drafts', { method: 'POST', body: fd });
+      var data = await resp.json();
+
+      if (resp.ok) {
+        document.getElementById('draftForm').style.display = 'none';
+        var box = document.getElementById('successBox');
+        box.style.display = 'block';
+        /* Inject ref number */
+        var refEl = document.createElement('p');
+        refEl.style.cssText = 'font-family:monospace;font-size:1rem;font-weight:700;color:#065F46;margin-top:.5rem;background:#D1FAE5;padding:.5rem 1rem;border-radius:8px;display:inline-block';
+        refEl.textContent = 'Ref: ' + data.ref;
+        box.querySelector('h3').insertAdjacentElement('afterend', refEl);
+      } else {
+        errEl.textContent = '\u26A0 ' + (data.error || 'Submission failed. Please try again.');
+        errEl.style.display = 'block';
+        submitBtn.disabled  = false;
+        submitBtn.innerHTML = origHtml;
+      }
+    } catch (err) {
+      errEl.textContent = '\u26A0 Network error — please check your connection and try again.';
+      errEl.style.display = 'block';
+      submitBtn.disabled  = false;
+      submitBtn.innerHTML = origHtml;
+    }
+  });
+</script>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<script>
+  var fileInput = document.getElementById('fileInput');
+  var fileDrop  = document.getElementById('fileDrop');
+  var fileName  = document.getElementById('fileName');
+  var fileAttached = false;
+
+  /* Click to browse */
+  fileDrop.addEventListener('click', function() { fileInput.click(); });
+
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length > 0) {
+      var f = fileInput.files[0];
+      /* Validate size (10 MB) */
+      if (f.size > 10 * 1024 * 1024) {
+        alert('File is too large. Maximum size is 10 MB.');
+        fileInput.value = '';
+        return;
+      }
+      fileName.textContent = '✓ ' + f.name;
+      fileName.style.display = 'block';
+      fileDrop.style.borderColor = 'var(--gold)';
+      fileDrop.style.background  = 'var(--gold-faint)';
+      fileAttached = true;
+      document.getElementById('df-file-error').style.display = 'none';
+    }
+  });
+
+  /* Drag and drop */
+  ['dragover','dragenter'].forEach(function(evt) {
+    fileDrop.addEventListener(evt, function(e) {
+      e.preventDefault();
+      fileDrop.classList.add('dragging');
+    });
+  });
+  ['dragleave','dragend'].forEach(function(evt) {
+    fileDrop.addEventListener(evt, function() { fileDrop.classList.remove('dragging'); });
+  });
+  fileDrop.addEventListener('drop', function(e) {
+    e.preventDefault();
+    fileDrop.classList.remove('dragging');
+    if (e.dataTransfer.files.length) {
+      var f = e.dataTransfer.files[0];
+      var allowed = ['.docx','.pdf','.txt'];
+      var ext = f.name.slice(f.name.lastIndexOf('.')).toLowerCase();
+      if (!allowed.includes(ext)) { alert('Please upload a .docx, .pdf, or .txt file.'); return; }
+      if (f.size > 10 * 1024 * 1024) { alert('File is too large. Maximum size is 10 MB.'); return; }
+      /* Assign to input via DataTransfer */
+      try {
+        var dt = new DataTransfer();
+        dt.items.add(f);
+        fileInput.files = dt.files;
+      } catch(err) {}
+      fileName.textContent = '✓ ' + f.name;
+      fileName.style.display = 'block';
+      fileDrop.style.borderColor = 'var(--gold)';
+      fileDrop.style.background  = 'var(--gold-faint)';
+      fileAttached = true;
+      document.getElementById('df-file-error').style.display = 'none';
+    }
+  });
+
+  /* Character counter */
+  var textarea  = document.getElementById('commentsField');
+  var charCount = document.getElementById('charCount');
+  textarea.addEventListener('input', function() { charCount.textContent = textarea.value.length; });
+
+  /* Form submit */
+  document.getElementById('draftForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var name       = document.getElementById('df-name').value.trim();
+    var email      = document.getElementById('df-email').value.trim();
+    var course     = document.getElementById('df-course').value.trim();
+    var instructor = document.getElementById('df-instructor').value.trim();
+    var type       = document.getElementById('df-type').value;
+    var errEl      = document.getElementById('draftFormError');
+    var fileErrEl  = document.getElementById('df-file-error');
+    var hasFile    = fileInput.files.length > 0;
+
+    var valid = name && email && email.includes('@') && course && instructor && type && hasFile;
+    if (!valid) {
+      errEl.style.display = 'block';
+      if (!hasFile) fileErrEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display 
