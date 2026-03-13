@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Appointment | VUU Writing Center</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ─── BOOKING LAYOUT ─────────────────────────── */
+    .booking-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: var(--space-8);
+      align-items: start;
+    }
+
+    /* ─── STEP TRACKER ───────────────────────────── */
+    .step-tracker {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--space-8);
+    }
+    .st-step {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gray-300);
+      flex-shrink: 0;
+    }
+    .st-num {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      color: var(--gray-500);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+      transition: all 0.25s;
+    }
+    .st-step.active .st-num { background: var(--gold); color: var(--white); box-shadow: 0 2px 8px rgba(200,146,42,0.4); }
+    .st-step.active         { color: var(--navy); }
+    .st-step.done .st-num   { background: var(--navy); color: var(--white); }
+    .st-step.done           { color: var(--text-muted); }
+    .st-line { flex: 1; height: 2px; background: var(--gray-200); margin: 0 var(--space-2); transition: background 0.25s; }
+    .st-line.done { background: var(--navy); }
+
+    /* ─── PANELS ─────────────────────────────────── */
+    .booking-panel { display: none; }
+    .booking-panel.active { display: block; }
+    .panel-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--navy); margin-bottom: var(--space-5);
+    }
+
+    /* ─── FORMAT CARDS ───────────────────────────── */
+    .format-cards {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3); margin-bottom: var(--space-6);
+    }
+    .format-card {
+      border: 2px solid var(--border-light); border-radius: var(--r-lg);
+      padding: var(--space-5); cursor: pointer; transition: all 0.2s;
+      background: var(--white); text-align: center;
+    }
+    .format-card:hover    { border-color: var(--gold); background: var(--gold-faint); }
+    .format-card.selected { border-color: var(--gold); background: var(--gold-faint); box-shadow: 0 0 0 3px rgba(200,146,42,0.15); }
+    .fc-icon  { font-size: 2rem; margin-bottom: var(--space-2); }
+    .fc-label { font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .fc-meta  { font-family: 'Outfit', sans-serif; font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ─── CALENDAR ───────────────────────────────── */
+    .calendar-wrap { border: 1px solid var(--border-light); border-radius: var(--r-lg); overflow: hidden; margin-bottom: var(--space-6); }
+    .cal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--space-4) var(--space-5); background: var(--navy);
+    }
+    .cal-header-title { font-family: 'Outfit', sans-serif; font-size: 0.92rem; font-weight: 700; color: var(--white); }
+    .cal-nav {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--r-sm); color: var(--white);
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1rem; line-height: 1;
+      transition: background 0.15s;
+    }
+    .cal-nav:hover { background: rgba(255,255,255,0.22); }
+    .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--navy-2); }
+    .cal-weekday {
+      text-align: center; padding: var(--space-2);
+      font-family: 'Outfit', sans-serif; font-size: 0.68rem;
+      font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border-light); }
+    .cal-day {
+      background: var(--white); text-align: center;
+      padding: var(--space-3) var(--space-2);
+      font-family: 'Outfit', sans-serif; font-size: 0.85rem;
+      cursor: pointer; transition: all 0.15s;
+      min-height: 44px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px;
+    }
+    .cal-day:hover:not(.disabled):not(.empty) { background: var(--gold-faint); color: var(--navy); }
+    .cal-day.selected  { background: var(--gold); color: var(--white); font-weight: 700; }
+    .cal-day.today:not(.selected) { font-weight: 700; color: var(--gold); }
+    .cal-day.disabled  { color: var(--gray-300); cursor: not-allowed; background: var(--gray-50); }
+    .cal-day.empty     { cursor: default; background: var(--gray-50); }
+    .cal-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); opacity: 0.5; }
+    .cal-day.selected .cal-dot { background: var(--white); opacity: 0.8; }
+    .cal-day.disabled .cal-dot  { display: none; }
+
+    /* ─── TIME SLOTS ─────────────────────────────── */
+    .time-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); margin-bottom: var(--space-6); }
+    .time-slot {
+      border: 1.5px solid var(--border-light); border-radius: var(--r-md);
+      padding: var(--space-3); text-align: center; cursor: pointer;
+      font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 600;
+      color: var(--navy); transition: all 0.15s; background: var(--white);
+    }
+    .time-slot:hover:not(.taken) { border-color: var(--gold); background: var(--gold-faint); }
+    .time-slot.selected { border-color: var(--gold); background: var(--gold); color: var(--white); }
+    .time-slot.taken { color: var(--gray-300); background: var(--gray-50); cursor: not-allowed; border-style: dashed; font-size: 0.75rem; }
+
+    /* ─── TUTOR CARDS ────────────────────────────── */
+    .tutor-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-6); }
+    .tutor-card {
+      border: 2px solid var(--border-light); border-radius: var(--r-lg);
+      padding: var(--space-4); cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: var(--space-3);
+    }
+    .tutor-card:hover    { border-color: var(--gold); background: var(--gold-faint); }
+    .tutor-card.selected { border-color: var(--gold); background: var(--gold-faint); box-shadow: 0 0 0 3px rgba(200,146,42,0.15); }
+    .tutor-card.full-row { grid-column: 1 / -1; }
+    .tutor-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy-2), var(--navy-4));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 700;
+      color: var(--white); flex-shrink: 0;
+    }
+    .tutor-name  { font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+    .tutor-spec  { font-family: 'Outfit', sans-serif; font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+    .tutor-avail { font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 600; color: #059669; margin-top: 3px; }
+
+    /* ─── STUDENT FORM ───────────────────────────── */
+    .student-form { display: flex; flex-direction: column; gap: var(--space-4); }
+    .student-form .form-group { display: flex; flex-direction: column; gap: var(--space-2); }
+    .student-form label { font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--navy); }
+    .student-form label .req { color: var(--gold); margin-left: 2px; }
+    .student-form .form-control {
+      padding: 0.75rem 1rem; border: 1.5px solid var(--border);
+      border-radius: var(--r-md); font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem; color: var(--text-primary); background: var(--gray-50);
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s; width: 100%;
+    }
+    .student-form .form-control:focus {
+      outline: none; background: var(--white);
+      border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,146,42,0.12);
+    }
+    .student-form textarea.form-control { resize: vertical; min-height: 90px; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .checkbox-row { display: flex; align-items: center; gap: var(--space-3); flex-direction: row !important; }
+    .checkbox-row input { width: 16px; height: 16px; accent-color: var(--gold); cursor: pointer; flex-shrink: 0; }
+    .checkbox-row label { font-weight: 400; color: var(--text-secondary); cursor: pointer; }
+
+    /* ─── FIELD ERRORS ───────────────────────────── */
+    .field-error {
+      font-family: 'Outfit', sans-serif; font-size: 0.75rem;
+      color: #DC2626; display: none; margin-top: 2px;
+    }
+    .field-error.show { display: block; }
+    .form-control.error { border-color: #DC2626; }
+
+    /* ─── NAV BUTTONS ────────────────────────────── */
+    .booking-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: var(--space-6); padding-top: var(--space-5);
+      border-top: 1px solid var(--border-light); gap: var(--space-3);
+    }
+    .btn-back {
+      background: none; border: 1.5px solid var(--border); color: var(--text-secondary);
+      border-radius: var(--r-full); padding: 0.7rem 1.5rem;
+      font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn-back:hover { border-color: var(--navy); color: var(--navy); }
+
+    /* ─── REVIEW STEP ────────────────────────────── */
+    .review-block { background: var(--gray-50); border-radius: var(--r-lg); padding: var(--space-5); margin-bottom: var(--space-4); }
+    .review-block-label { font-family: 'Outfit', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: var(--space-3); }
+    .review-row { display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--border-light); gap: var(--space-4); }
+    .review-row:last-of-type { border-bottom: none; }
+    .review-key { font-family: 'Outfit', sans-serif; font-size: 0.82rem; color: var(--text-muted); flex-shrink: 0; }
+    .review-val { font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--navy); text-align: right; }
+    .review-edit { font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 600; color: var(--gold); cursor: pointer; display: inline-block; margin-top: var(--space-2); }
+    .review-edit:hover { text-decoration: underline; }
+    .terms-note { background: rgba(200,146,42,0.06); border: 1px solid rgba(200,146,42,0.2); border-radius: var(--r-md); padding: var(--space-4) var(--space-5); font-family: 'Outfit', sans-serif; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: var(--space-2); }
+
+    /* ─── SUMMARY SIDEBAR ────────────────────────── */
+    .booking-summary {
+      background: var(--white); border: 1px solid var(--border-light);
+      border-radius: var(--r-xl); padding: var(--space-6);
+      position: sticky; top: 100px; box-shadow: var(--shadow-sm);
+    }
+    .bs-title { font-family: 'Outfit', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: var(--space-5); }
+    .bs-row { display: flex; gap: var(--space-3); margin-bottom: var(--space-4); align-items: flex-start; }
+    .bs-icon { font-size: 1.1rem; width: 22px; text-align: center; flex-shrink: 0; margin-top: 1px; }
+    .bs-label { font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 2px; }
+    .bs-value { font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 600; color: var(--navy); }
+    .bs-value.empty { color: var(--gray-300); font-weight: 400; font-style: italic; font-size: 0.82rem; }
+    .bs-divider { height: 1px; background: var(--border-light); margin: var(--space-4) 0; }
+    .bs-free { display: flex; align-items: center; gap: var(--space-2); background: #ECFDF5; border: 1px solid #6EE7B7; border-radius: var(--r-md); padding: var(--space-3) var(--space-4); margin-top: var(--space-2); }
+    .bs-free span { font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 700; color: #065F46; }
+
+    /* ─── CONFIRMATION ───────────────────────────── */
+    .confirmation { text-align: center; padding: var(--space-10) var(--space-8); }
+    .conf-checkmark { width: 80px; height: 80px; background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto var(--space-6); box-shadow: 0 4px 20px rgba(5,150,105,0.2); }
+    .confirmation h2 { font-size: 1.9rem; color: var(--navy); margin-bottom: var(--space-3); }
+    .confirmation > p { font-family: 'Outfit', sans-serif; font-size: 0.95rem; color: var(--text-muted); max-width: 460px; margin: 0 auto var(--space-8); line-height: 1.7; }
+    .conf-card { background: var(--gray-50); border: 1px solid var(--border-light); border-radius: var(--r-xl); padding: var(--space-6); max-width: 440px; margin: 0 auto var(--space-8); text-align: left; }
+    .conf-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) 0; border-bottom: 1px solid var(--border-light); gap: var(--space-4); }
+    .conf-row:last-child { border-bottom: none; }
+    .conf-key { font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+    .conf-val { font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--navy); text-align: right; }
+    .conf-ref { font-family: 'Courier New', monospace; font-size: 1rem; letter-spacing: 0.1em; color: var(--gold); }
+    .conf-actions { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 960px) {
+      .booking-layout { grid-template-columns: 1fr; }
+      .booking-summary { position: static; }
+      .format-cards { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .time-slots { grid-template-columns: repeat(3, 1fr); }
+      .tutor-cards { grid-template-columns: 1fr; }
+      .row-2 { grid-template-columns: 1fr; }
+      .st-step span { display: none; }
+    }
+    @media (max-width: 400px) {
+      .time-slots { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a><span class="sep">/</span><span class="current">Appointments</span>
+      </div>
+      <span class="eyebrow">Free for All VUU Students</span>
+      <h1>Book an Appointment</h1>
+      <p>Pick your session format, choose a date and time, and you're done — it takes less than two minutes.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="booking-layout">
+
+      <!-- ══════════ FORM AREA ══════════ -->
+      <div id="formArea">
+
+        <!-- Step tracker -->
+        <div class="step-tracker">
+          <div class="st-step active" id="st1"><div class="st-num">1</div><span>Session Type</span></div>
+          <div class="st-line" id="sl1"></div>
+          <div class="st-step" id="st2"><div class="st-num">2</div><span>Date &amp; Time</span></div>
+          <div class="st-line" id="sl2"></div>
+          <div class="st-step" id="st3"><div class="st-num">3</div><span>Your Info</span></div>
+          <div class="st-line" id="sl3"></div>
+          <div class="st-step" id="st4"><div class="st-num">4</div><span>Review</span></div>
+        </div>
+
+        <!-- ── PANEL 1: Session type ── -->
+        <div class="booking-panel active" id="panel1">
+          <div class="panel-title">What kind of session would you like?</div>
+          <div class="format-cards" id="formatCards">
+            <div class="format-card" data-format="In-Person" onclick="selectFormat(this)">
+              <div class="fc-icon">🏛️</div>
+              <div class="fc-label">In-Person</div>
+              <div class="fc-meta">Wilder Library, Rm 118<br>45 minutes</div>
+            </div>
+            <div class="format-card" data-format="Virtual (Zoom)" onclick="selectFormat(this)">
+              <div class="fc-icon">💻</div>
+              <div class="fc-label">Virtual (Zoom)</div>
+              <div class="fc-meta">Zoom link sent by email<br>45 minutes</div>
+            </div>
+            <div class="format-card" data-format="Async Draft Review" onclick="selectFormat(this)">
+              <div class="fc-icon">📄</div>
+              <div class="fc-label">Async Draft Review</div>
+              <div class="fc-meta">Submit your draft online<br>Feedback within 48 hrs</div>
+            </div>
+          </div>
+          <div class="field-error" id="err-format">⚠ Please select a session format to continue.</div>
+
+          <div class="panel-title">What are you working on?</div>
+          <div class="student-form">
+            <div class="form-group">
+              <label>Writing Topic / Assignment Type <span class="req">*</span></label>
+              <select class="form-control" id="writingType">
+                <option value="">— Select one —</option>
+                <option>Essay / Research Paper</option>
+                <option>Thesis or Dissertation</option>
+                <option>Lab Report or STEM Writing</option>
+                <option>Personal Statement / Application Essay</option>
+                <option>Resume or Cover Letter</option>
+                <option>Creative Writing</option>
+                <option>Annotated Bibliography</option>
+                <option>Grammar &amp; Mechanics Help</option>
+                <option>Citation / MLA / APA Help</option>
+                <option>Other / Not Sure Yet</option>
+              </select>
+              <div class="field-error" id="err-type">⚠ Please select your writing topic.</div>
+            </div>
+          </div>
+
+          <div class="booking-nav">
+            <div></div>
+            <button class="btn btn-gold btn-lg" onclick="goTo(2)">
+              Next — Choose Date &amp; Time
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ── PANEL 2: Date & time ── -->
+        <div class="booking-panel" id="panel2">
+          <div class="panel-title">Pick a date</div>
+          <div class="calendar-wrap">
+            <div class="cal-header">
+              <button class="cal-nav" onclick="shiftMonth(-1)">&#8249;</button>
+              <div class="cal-header-title" id="calTitle"></div>
+              <button class="cal-nav" onclick="shiftMonth(1)">&#8250;</button>
+            </div>
+            <div class="cal-weekdays">
+              <div class="cal-weekday">Su</div><div class="cal-weekday">Mo</div>
+              <div class="cal-weekday">Tu</div><div class="cal-weekday">We</div>
+              <div class="cal-weekday">Th</div><div class="cal-weekday">Fr</div>
+              <div class="cal-weekday">Sa</div>
+            </div>
+            <div class="cal-days" id="calDays"></div>
+          </div>
+          <div class="field-error" id="err-date">⚠ Please select a date.</div>
+
+          <div id="slotSection" style="display:none">
+            <div class="panel-title">Available time slots</div>
+            <div class="time-slots" id="timeSlots"></div>
+            <div class="field-error" id="err-time">⚠ Please select a time slot.</div>
+          </div>
+
+          <div class="panel-title" style="margin-top:var(--space-7)">Choose a tutor <span style="font-weight:400;color:var(--text-muted);font-size:0.85rem">(optional)</span></div>
+          <div class="tutor-cards" id="tutorCards"></div>
+
+          <div class="booking-nav">
+            <button class="btn-back" onclick="goTo(1)">← Back</button>
+            <button class="btn btn-gold btn-lg" onclick="goTo(3)">
+              Next — Your Info
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ── PANEL 3: Student info ── -->
+        <div class="booking-panel" id="panel3">
+          <div class="panel-title">Tell us about yourself</div>
+          <div class="student-form">
+            <div class="row-2">
+              <div class="form-group">
+                <label>First Name <span class="req">*</span></label>
+                <input type="text" class="form-control" id="firstName" placeholder="First name" autocomplete="given-name" />
+                <div class="field-error" id="err-fname">⚠ Required.</div>
+              </div>
+              <div class="form-group">
+                <label>Last Name <span class="req">*</span></label>
+                <input type="text" class="form-control" id="lastName" placeholder="Last name" autocomplete="family-name" />
+                <div class="field-error" id="err-lname">⚠ Required.</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>VUU Email Address <span class="req">*</span></label>
+              <input type="email" class="form-control" id="email" placeholder="yourname@vuu.edu" autocomplete="email" />
+              <div class="field-error" id="err-email">⚠ Enter a valid email address.</div>
+            </div>
+            <div class="row-2">
+              <div class="form-group">
+                <label>Student ID <span class="req">*</span></label>
+                <input type="text" class="form-control" id="studentId" placeholder="e.g. VUU-2024-12345" />
+                <div class="field-error" id="err-sid">⚠ Required.</div>
+              </div>
+              <div class="form-group">
+                <label>Year / Level <span class="req">*</span></label>
+                <select class="form-control" id="yearLevel">
+                  <option value="">— Select —</option>
+                  <option>First Year</option>
+                  <option>Sophomore</option>
+                  <option>Junior</option>
+                  <option>Senior</option>
+                  <option>Graduate Student</option>
+                  <option>Non-Degree / Other</option>
+                </select>
+                <div class="field-error" id="err-year">⚠ Required.</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Course / Class Name <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+              <input type="text" class="form-control" id="courseName" placeholder="e.g. ENG 101 — Composition I" />
+            </div>
+            <div class="form-group">
+              <label>What would you like help with? <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+              <textarea class="form-control" id="focusNotes" placeholder="e.g. Feedback on my introduction, help with my thesis statement, MLA citation questions..."></textarea>
+            </div>
+            <div class="form-group checkbox-row">
+              <input type="checkbox" id="firstVisit" />
+              <label for="firstVisit">This is my first visit to the Writing Center</label>
+            </div>
+          </div>
+
+          <div class="booking-nav">
+            <button class="btn-back" onclick="goTo(2)">← Back</button>
+            <button class="btn btn-gold btn-lg" onclick="goTo(4)">
+              Review My Booking
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ── PANEL 4: Review ── -->
+        <div class="booking-panel" id="panel4">
+          <div class="panel-title">Review your appointment</div>
+
+          <div class="review-block">
+            <div class="review-block-label">Session Details</div>
+            <div class="review-row"><span class="review-key">Format</span><span class="review-val" id="rv-format">—</span></div>
+            <div class="review-row"><span class="review-key">Topic</span><span class="review-val" id="rv-type">—</span></div>
+            <div class="review-row"><span class="review-key">Date</span><span class="review-val" id="rv-date">—</span></div>
+            <div class="review-row"><span class="review-key">Time</span><span class="review-val" id="rv-time">—</span></div>
+            <div class="review-row"><span class="review-key">Tutor</span><span class="review-val" id="rv-tutor">—</span></div>
+            <span class="review-edit" onclick="goTo(2)">✏️ Edit date, time, or tutor</span>
+          </div>
+
+          <div class="review-block">
+            <div class="review-block-label">Your Information</div>
+            <div class="review-row"><span class="review-key">Name</span><span class="review-val" id="rv-name">—</span></div>
+            <div class="review-row"><span class="review-key">Email</span><span class="review-val" id="rv-email">—</span></div>
+            <div class="review-row"><span class="review-key">Student ID</span><span class="review-val" id="rv-sid">—</span></div>
+            <div class="review-row"><span class="review-key">Year</span><span class="review-val" id="rv-year">—</span></div>
+            <div class="review-row"><span class="review-key">Course</span><span class="review-val" id="rv-course">—</span></div>
+            <span class="review-edit" onclick="goTo(3)">✏️ Edit your information</span>
+          </div>
+
+          <div class="terms-note">
+            📧 A confirmation will be sent to your email. Please cancel at least 24 hours in advance if you can't make it — this allows another student to take your slot.
+          </div>
+
+          <div class="booking-nav">
+            <button class="btn-back" onclick="goTo(3)">← Back</button>
+            <button class="btn btn-gold btn-xl" onclick="submitBooking()">
+              ✓ Confirm My Appointment
+            </button>
+          </div>
+        </div>
+
+        <!-- ── CONFIRMATION ── -->
+        <div class="booking-panel" id="panelDone">
+          <div class="confirmation">
+            <div class="conf-checkmark">✅</div>
+            <h2>You're booked!</h2>
+            <p>Your appointment has been confirmed. Check your inbox for a confirmation email with everything you need to know.</p>
+            <div class="conf-card">
+              <div class="conf-row"><span class="conf-key">Student</span><span class="conf-val" id="cf-name">—</span></div>
+              <div class="conf-row"><span class="conf-key">Session</span><span class="conf-val" id="cf-format">—</span></div>
+              <div class="conf-row"><span class="conf-key">Date</span><span class="conf-val" id="cf-date">—</span></div>
+              <div class="conf-row"><span class="conf-key">Time</span><span class="conf-val" id="cf-time">—</span></div>
+              <div class="conf-row"><span class="conf-key">Tutor</span><span class="conf-val" id="cf-tutor">—</span></div>
+              <div class="conf-row"><span class="conf-key">Confirmation #</span><span class="conf-val conf-ref" id="cf-ref">—</span></div>
+            </div>
+            <div class="conf-actions">
+              <button class="btn btn-outline btn-lg" onclick="window.print()">🖨 Print / Save</button>
+              <a href="index.html" class="btn btn-navy btn-lg">Back to Home</a>
+            </div>
+            <p style="margin-top:2rem;font-family:'Outfit',sans-serif;font-size:0.82rem;color:var(--text-muted)">
+              Need to cancel? Email <a href="mailto:writingcenter@vuu.edu" style="color:var(--gold)">writingcenter@vuu.edu</a> with your confirmation number.
+            </p>
+          </div>
+        </div>
+
+      </div><!-- /formArea -->
+
+      <!-- ══════════ SUMMARY SIDEBAR ══════════ -->
+      <div class="booking-summary" id="summaryBar">
+        <div class="bs-title">Your Booking Summary</div>
+        <div class="bs-row">
+          <div class="bs-icon">📋</div>
+          <div><div class="bs-label">Session Format</div><div class="bs-value empty" id="bs-format">Not selected</div></div>
+        </div>
+        <div class="bs-row">
+          <div class="bs-icon">✏️</div>
+          <div><div class="bs-label">Writing Topic</div><div class="bs-value empty" id="bs-type">Not selected</div></div>
+        </div>
+        <div class="bs-divider"></div>
+        <div class="bs-row">
+          <div class="bs-icon">📅</div>
+          <div><div class="bs-label">Date</div><div class="bs-value empty" id="bs-date">Not selected</div></div>
+        </div>
+        <div class="bs-row">
+          <div class="bs-icon">🕐</div>
+          <div><div class="bs-label">Time</div><div class="bs-value empty" id="bs-time">Not selected</div></div>
+        </div>
+        <div class="bs-row">
+          <div class="bs-icon">👤</div>
+          <div><div class="bs-label">Tutor</div><div class="bs-value empty" id="bs-tutor">Not selected</div></div>
+        </div>
+        <div class="bs-divider"></div>
+        <div class="bs-row">
+          <div class="bs-icon">🎓</div>
+          <div><div class="bs-label">Student</div><div class="bs-value empty" id="bs-student">Not entered</div></div>
+        </div>
+        <div class="bs-free">
+          <span>💚 This session is 100% free</span>
+        </div>
+      </div>
+
+    </div><!-- /booking-layout -->
+
+    <!-- Walk-in callout -->
+    <div class="info-callout reveal" style="margin-top:var(--space-10)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p><strong style="color:var(--white)">Walk-ins Welcome:</strong> Can't find a time? Walk-ins are accepted on a first-come, first-served basis when tutors are available. Check in at the front desk in Wilder Library, Room 118.</p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+/* ════════════════════════════════════════════════
+   BOOKING FORM STATE & LOGIC
+════════════════════════════════════════════════ */
+
+const S = {
+  step: 1,
+  format: '', type: '',
+  date: null, dateStr: '', time: '',
+  tutorId: 'any', tutorName: 'Any Available Tutor',
+  firstName: '', lastName: '', email: '',
+  studentId: '', year: '', course: '', notes: '', firstVisit: false,
+};
+
+/* ── TUTORS ───────────────────────────────────── */
+const TUTORS = [
+  { id:'any', init:'★',  name:'Any Available Tutor',   spec:'Best match for your needs',          avail:'Always available', full:true },
+  { id:'t1',  init:'AJ', name:'Amara Johnson',          spec:'Humanities, Research Writing',        avail:'5 slots open' },
+  { id:'t2',  init:'MC', name:'Marcus Carter',          spec:'STEM, Technical Writing',             avail:'3 slots open' },
+  { id:'t3',  init:'PS', name:'Priya Sharma',           spec:'APA / MLA, Social Sciences',          avail:'4 slots open' },
+  { id:'t4',  init:'DW', name:'Devon Williams',         spec:'Creative Writing, Personal Essays',   avail:'2 slots open' },
+  { id:'t5',  init:'KL', name:'Keisha Lewis',           spec:'Graduate Writing, Dissertations',     avail:'3 slots open' },
+];
+
+/* ── CALENDAR ─────────────────────────────────── */
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+// Slots that are "already taken" by day-of-week (1=Mon…5=Fri)
+const TAKEN  = { 1:['9:00 AM','11:00 AM','3:00 PM'], 2:['10:00 AM','2:00 PM'], 3:['9:00 AM','1:00 PM','4:00 PM'], 4:['11:00 AM','3:00 PM'], 5:['9:00 AM','10:00 AM'] };
+const SLOTS  = ['9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM'];
+
+let calYM = { y: new Date().getFullYear(), m: new Date().getMonth() };
+
+function buildCalendar() {
+  const { y, m } = calYM;
+  document.getElementById('calTitle').textContent = MONTHS[m] + ' ' + y;
+  const firstDow = new Date(y, m, 1).getDay();
+  const daysIn   = new Date(y, m + 1, 0).getDate();
+  const today    = new Date(); today.setHours(0,0,0,0);
+  const cont = document.getElementById('calDays');
+  cont.innerHTML = '';
+
+  for (let i = 0; i < firstDow; i++) {
+    const e = document.createElement('div'); e.className = 'cal-day empty'; cont.appendChild(e);
+  }
+  for (let d = 1; d <= daysIn; d++) {
+    const dt  = new Date(y, m, d);
+    const dow = dt.getDay();
+    const past = dt < today;
+    const wknd = dow === 0 || dow === 6;
+    const isSel = S.date && dt.toDateString() === S.date.toDateString();
+    const isTdy = dt.toDateString() === today.toDateString();
+
+    const e = document.createElement('div');
+    e.className = 'cal-day' + (past||wknd ? ' disabled' : '') + (isSel ? ' selected' : '') + (isTdy ? ' today' : '');
+    e.innerHTML = d + (!past && !wknd ? '<div class="cal-dot"></div>' : '');
+    if (!past && !wknd) e.onclick = () => pickDate(dt, d);
+    cont.appendChild(e);
+  }
+}
+
+function shiftMonth(dir) { calYM.m += dir; if (calYM.m > 11) { calYM.m=0; calYM.y++; } if (calYM.m < 0) { calYM.m=11; calYM.y--; } buildCalendar(); }
+
+function pickDate(dt, d) {
+  S.date = dt;
+  S.dateStr = DAYS[dt.getDay()] + ', ' + MONTHS[dt.getMonth()] + ' ' + d + ', ' + dt.getFullYear();
+  S.time = '';
+  buildCalendar();
+  buildSlots(dt.getDay());
+  refreshSummary();
+  hide('err-date');
+}
+
+function buildSlots(dow) {
+  const section = document.getElementById('slotSection');
+  const cont    = document.getElementById('timeSlots');
+  section.style.display = 'block';
+  cont.innerHTML = '';
+  const taken = TAKEN[dow] || [];
+  SLOTS.forEach(s => {
+    const isTaken = taken.includes(s);
+    const e = document.createElement('div');
+    e.className = 'time-slot' + (isTaken ? ' taken' : '') + (S.time === s ? ' selected' : '');
+    e.textContent = isTaken ? s + ' — Full' : s;
+    if (!isTaken) e.onclick = () => pickSlot(s);
+    cont.appendChild(e);
+  });
+}
+
+function pickSlot(s) {
+  S.time = s;
+  document.querySelectorAll('.time-slot').forEach(e => e.classList.toggle('selected', e.textContent === s));
+  refreshSummary();
+  hide('err-time');
+}
+
+/* ── TUTORS ───────────────────────────────────── */
+function buildTutors() {
+  const cont = document.getElementById('tutorCards');
+  cont.innerHTML = '';
+  TUTORS.forEach(t => {
+    const e = document.createElement('div');
+    e.className = 'tutor-card' + (t.full ? ' full-row' : '') + (S.tutorId === t.id ? ' selected' : '');
+    e.innerHTML = `<div class="tutor-avatar">${t.init}</div><div><div class="tutor-name">${t.name}</div><div class="tutor-spec">${t.spec}</div><div class="tutor-avail">✓ ${t.avail}</div></div>`;
+    e.onclick = () => pickTutor(t, e);
+    cont.appendChild(e);
+  });
+}
+
+function pickTutor(t, el) {
+  S.tutorId = t.id; S.tutorName = t.name;
+  document.querySelectorAll('.tutor-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  refreshSummary();
+}
+
+/* ── FORMAT ───────────────────────────────────── */
+function selectFormat(el) {
+  document.querySelectorAll('.format-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  S.format = el.dataset.format;
+  refreshSummary();
+  hide('err-format');
+}
+
+/* ── SUMMARY ──────────────────────────────────── */
+function refreshSummary() {
+  const set = (id, val) => {
+    const el = document.getElementById(id); if (!el) return;
+    if (val) { el.textContent = val; el.classList.remove('empty'); }
+    else { el.classList.add('empty'); }
+  };
+  set('bs-format', S.format   || null);
+  set('bs-type',   document.getElementById('writingType')?.value || null);
+  set('bs-date',   S.dateStr  || null);
+  set('bs-time',   S.time     || null);
+  set('bs-tutor',  S.tutorName || null);
+  const n = ((document.getElementById('firstName')?.value||'') + ' ' + (document.getElementById('lastName')?.value||'')).trim();
+  set('bs-student', n || null);
+}
+
+/* ── STEP NAVIGATION ──────────────────────────── */
+function goTo(n) {
+  if (n > S.step && !validate(S.step)) return;
+
+  if (S.step === 1) { S.type = document.getElementById('writingType').value; }
+  if (S.step === 3 && n > 3) {
+    S.firstName  = document.getElementById('firstName').value.trim();
+    S.lastName   = document.getElementById('lastName').value.trim();
+    S.email      = document.getElementById('email').value.trim();
+    S.studentId  = document.getElementById('studentId').value.trim();
+    S.year       = document.getElementById('yearLevel').value;
+    S.course     = document.getElementById('courseName').value.trim();
+    S.notes      = document.getElementById('focusNotes').value.trim();
+    S.firstVisit = document.getElementById('firstVisit').checked;
+  }
+
+  S.step = n;
+  ['panel1','panel2','panel3','panel4','panelDone'].forEach((id, i) => {
+    document.getElementById(id)?.classList.toggle('active', i + 1 === n || (n === 5 && id === 'panelDone'));
+  });
+
+  for (let i = 1; i <= 4; i++) {
+    const s = document.getElementById('st' + i);
+    const l = document.getElementById('sl' + i);
+    s.className = 'st-step' + (i < n ? ' done' : i === n ? ' active' : '');
+    if (l) l.className = 'st-line' + (i < n ? ' done' : '');
+  }
+
+  if (n === 4) fillReview();
+  document.getElementById('summaryBar').style.display = n === 5 ? 'none' : '';
+  refreshSummary();
+
+  const top = document.getElementById('formArea').getBoundingClientRect().top + window.scrollY - 96;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+/* ── VALIDATION ───────────────────────────────── */
+function validate(step) {
+  let ok = true;
+  if (step === 1) {
+    S.format ? hide('err-format') : (show('err-format'), ok=false);
+    document.getElementById('writingType').value ? hide('err-type') : (show('err-type'), ok=false);
+  }
+  if (step === 2) {
+    S.date ? hide('err-date') : (show('err-date'), ok=false);
+    S.time ? hide('err-time') : (show('err-time'), ok=false);
+  }
+  if (step === 3) {
+    const f=document.getElementById('firstName').value.trim();
+    const l=document.getElementById('lastName').value.trim();
+    const e=document.getElementById('email').value.trim();
+    const s=document.getElementById('studentId').value.trim();
+    const y=document.getElementById('yearLevel').value;
+    f?hide('err-fname'):(show('err-fname'),ok=false);
+    l?hide('err-lname'):(show('err-lname'),ok=false);
+    (e&&e.includes('@'))?hide('err-email'):(show('err-email'),ok=false);
+    s?hide('err-sid'):(show('err-sid'),ok=false);
+    y?hide('err-year'):(show('err-year'),ok=false);
+  }
+  return ok;
+}
+
+function show(id) { document.getElementById(id)?.classList.add('show'); }
+function hide(id) { document.getElementById(id)?.classList.remove('show'); }
+
+/* ── FILL REVIEW ──────────────────────────────── */
+function fillReview() {
+  const fn = n => { const e=document.getElementById(n); if(e) e.textContent = S[n.replace('rv-','')] || '—'; };
+  document.getElementById('rv-format').textContent = S.format;
+  document.getElementById('rv-type').textContent   = S.type;
+  document.getElementById('rv-date').textContent   = S.dateStr;
+  document.getElementById('rv-time').textContent   = S.time;
+  document.getElementById('rv-tutor').textContent  = S.tutorName;
+  document.getElementById('rv-name').textContent   = S.firstName + ' ' + S.lastName;
+  document.getElementById('rv-email').textContent  = S.email;
+  document.getElementById('rv-sid').textContent    = S.studentId;
+  document.getElementById('rv-year').textContent   = S.year;
+  document.getElementById('rv-course').textContent = S.course || 'Not specified';
+}
+
+/* ── SUBMIT ───────────────────────────────────── */
+function submitBooking() {
+  const ref = 'WC-' + Date.now().toString(36).toUpperCase().slice(-6);
+  document.getElementById('cf-name').textContent   = S.firstName + ' ' + S.lastName;
+  document.getElementById('cf-format').textContent = S.format;
+  document.getElementById('cf-date').textContent   = S.dateStr;
+  document.getElementById('cf-time').textContent   = S.time;
+  document.getElementById('cf-tutor').textContent  = S.tutorName;
+  document.getElementById('cf-ref').textContent    = ref;
+
+  ['panel1','panel2','panel3','panel4'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById('panelDone').classList.add('active');
+  document.getElementById('summaryBar').style.display = 'none';
+  for (let i=1;i<=4;i++) {
+    document.getElementById('st'+i).className='st-step done';
+    const l=document.getElementById('sl'+i); if(l) l.className='st-line done';
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  /*
+  ┌─ CONNECT TO YOUR BACKEND ──────────────────────────────────┐
+  │ Replace this comment with a fetch() to your form handler.  │
+  │                                                            │
+  │ Option A — Formspree (free, no backend needed):            │
+  │   fetch('https://formspree.io/f/YOUR_FORM_ID', {          │
+  │     method: 'POST',                                        │
+  │     headers: { 'Content-Type': 'application/json' },       │
+  │     body: JSON.stringify({ ...S, ref })                    │
+  │   });                                                      │
+  │                                                            │
+  │ Option B — Your own API endpoint:                          │
+  │   fetch('/api/bookings', { method:'POST', ... })           │
+  │                                                            │
+  │ Option C — EmailJS (sends email directly from browser):    │
+  │   emailjs.send('SERVICE_ID','TEMPLATE_ID', { ...S, ref })  │
+  └────────────────────────────────────────────────────────────┘
+  */
+}
+
+/* ── INIT ─────────────────────────────────────── */
+buildCalendar();
+buildTutors();
+// Pre-select "Any Available Tutor"
+document.querySelector('.tutor-card')?.classList.add('selected');
+
+// Live name update in summary
+['firstName','lastName'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', refreshSummary);
+});
+document.getElementById('writingType')?.addEventListener('change', refreshSummary);
+</script>
+
+<script src="shared.js"></script>
+</body>
+</html>
