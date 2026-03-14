@@ -32,10 +32,6 @@ const appointmentsRouter = require('./routes/appointments');
 const app  = express();
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
 // ── Trust proxy (required on Render for rate limiting) ────────────
 app.set('trust proxy', 1);
 
