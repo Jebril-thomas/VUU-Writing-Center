@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | VUU Writing Center</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a><span class="sep">/</span><span class="current">Contact</span>
+      </div>
+      <span class="eyebrow">Get in Touch</span>
+      <h1>Contact Us</h1>
+      <p>Have a question or want to find us on campus? We'd love to hear from you.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-grid reveal">
+
+      <!-- LEFT: Info -->
+      <div>
+        <div class="contact-info-panel">
+          <h3>Writing Center Info</h3>
+          <div class="contact-detail">
+            <div class="cd-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div>
+              <div class="cd-label">Location</div>
+              <p class="cd-text">L. Douglas Wilder Library &amp; Learning Resource Center<br>Room 118, Ground Floor<br>1500 N Lombardy Street, Richmond, VA 23220</p>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="cd-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div>
+              <div class="cd-label">Email</div>
+              <p class="cd-text"><a href="mailto:writingcenter@vuu.edu">writingcenter@vuu.edu</a></p>
+              <p class="cd-text" style="font-size:0.8rem;opacity:0.6;margin-top:2px">We respond within 1–2 business days</p>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="cd-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41a2 2 0 0 1 2-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9a16 16 0 0 0 6.91 6.91l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+            <div>
+              <div class="cd-label">Phone</div>
+              <p class="cd-text"><a href="tel:+18042575600">(804) 257-5600</a></p>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="cd-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div>
+              <div class="cd-label">Director</div>
+              <p class="cd-text">Dr. Patricia Williams<br><a href="mailto:pwilliams@vuu.edu">pwilliams@vuu.edu</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hours-card">
+          <h4>Center Hours</h4>
+          <p>During the academic semester. Summer hours may vary.</p>
+          <table class="hours-table">
+            <thead><tr><th>Day</th><th>Hours</th></tr></thead>
+            <tbody>
+              <tr><td>Monday</td><td>9:00 AM – 6:00 PM</td></tr>
+              <tr><td>Tuesday</td><td>9:00 AM – 7:00 PM</td></tr>
+              <tr><td>Wednesday</td><td>9:00 AM – 6:00 PM</td></tr>
+              <tr><td>Thursday</td><td>9:00 AM – 7:00 PM</td></tr>
+              <tr><td>Friday</td><td>9:00 AM – 4:00 PM</td></tr>
+              <tr><td>Saturday</td><td>10:00 AM – 2:00 PM</td></tr>
+              <tr><td>Sunday</td><td class="hours-closed">Closed</td></tr>
+            </tbody>
+          </table>
+          <p style="font-family:'Outfit',sans-serif;font-size:0.78rem;color:var(--text-muted);margin-top:1rem">⚠️ Hours may change during finals, holidays, and semester breaks.</p>
+        </div>
+
+        <div class="map-stub">
+          <svg width="36" height="36" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Wilder Library — VUU Campus, Richmond, VA</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Form + FAQ -->
+      <div>
+        <div class="contact-form-card">
+          <h3>Send Us a Message</h3>
+          <p>Have a question, feedback, or want to connect? We'll get back to you within two business days.</p>
+
+          <form id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name <span style="color:#DC2626">*</span></label>
+                <input type="text" id="cf-fname" class="form-control" placeholder="First name" required />
+              </div>
+              <div class="form-group">
+                <label>Last Name <span style="color:#DC2626">*</span></label>
+                <input type="text" id="cf-lname" class="form-control" placeholder="Last name" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email Address <span style="color:#DC2626">*</span></label>
+              <input type="email" id="cf-email" class="form-control" placeholder="yourname@vuu.edu" required />
+            </div>
+            <div class="form-group">
+              <label>I am a…</label>
+              <select id="cf-role" class="form-control">
+                <option value="">Select your role</option>
+                <option>Undergraduate Student</option>
+                <option>Graduate Student</option>
+                <option>Faculty / Staff</option>
+                <option>Prospective Student</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Subject <span style="color:#DC2626">*</span></label>
+              <select id="cf-subject" class="form-control" required>
+                <option value="">What is your message about?</option>
+                <option>Appointment Question</option>
+                <option>Draft Review Inquiry</option>
+                <option>Workshop Information</option>
+                <option>Tutor Application</option>
+                <option>Faculty Partnership</option>
+                <option>General Question</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Message <span style="color:#DC2626">*</span></label>
+              <textarea id="cf-message" class="form-control" placeholder="Tell us how we can help you…" required></textarea>
+            </div>
+            <div id="contactError" style="display:none;font-family:'Outfit',sans-serif;font-size:0.82rem;color:#DC2626;margin-bottom:1rem;padding:0.75rem 1rem;background:#FEF2F2;border-radius:8px;border:1px solid #FECACA">
+              ⚠ Please fill in all required fields.
+            </div>
+            <button type="submit" class="btn btn-gold btn-lg" style="width:100%">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+              Send Message
+            </button>
+          </form>
+
+          <div id="contactSuccess" class="success-box" style="display:none">
+            <svg width="44" height="44" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+            <h3>Message Sent!</h3>
+            <p>Thank you for reaching out. We'll respond to your email within two business days.</p>
+            <p style="margin-top:0.5rem;font-family:'Outfit',sans-serif;font-size:0.85rem">
+              Need an appointment? <a href="appointments.html" style="color:#047857;font-weight:600">Book one here →</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div style="margin-top:2.5rem">
+          <h4 style="margin-bottom:1.25rem">Frequently Asked Questions</h4>
+
+          <div class="faq-item">
+            <button class="faq-toggle" aria-expanded="false">Do I need a finished draft to come in? <span class="arrow">▾</span></button>
+            <div class="faq-body" hidden><p>No! You can come at any stage — with just an idea, an outline, or a rough draft. We work with you wherever you are in the writing process.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-toggle" aria-expanded="false">Is the Writing Center only for English classes? <span class="arrow">▾</span></button>
+            <div class="faq-body" hidden><p>Not at all. We help with writing for any course — history, science, business, theology, social work, and more. If you're writing it, we can help.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-toggle" aria-expanded="false">Will tutors write my paper for me? <span class="arrow">▾</span></button>
+            <div class="faq-body" hidden><p>No — and that's a good thing. Our tutors work with you to improve your skills, not to write for you. Everything remains your own work, which is how you actually grow.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-toggle" aria-expanded="false">Are sessions confidential? <span class="arrow">▾</span></button>
+            <div class="faq-body" hidden><p>Yes. Sessions and submissions are confidential between you and your tutor. We do not share your work or session notes with instructors.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-toggle" aria-expanded="false">How do I book an appointment? <span class="arrow">▾</span></button>
+            <div class="faq-body" hidden><p>Visit our <a href="appointments.html" style="color:var(--gold);font-weight:600">Appointments page</a> and complete the booking form. You'll receive a confirmation at your VUU email once your session is confirmed.</p></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────
+   contact.html — form logic
+   BACKEND_URL: set to your Render URL once deployed.
+───────────────────────────────────────────────────────────────── */
+var BACKEND_URL = (function() {
+  var h = window.location.hostname;
+  if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:3001';
+  // ← REPLACE with your Render URL before deploying to Vercel
+  return 'https://YOUR-APP-NAME.onrender.com';
+})();
+
+/* ── Contact form → POST /api/contact ─────────── */
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  var fname   = document.getElementById('cf-fname').value.trim();
+  var lname   = document.getElementById('cf-lname').value.trim();
+  var email   = document.getElementById('cf-email').value.trim();
+  var role    = document.getElementById('cf-role').value;
+  var subject = document.getElementById('cf-subject').value;
+  var message = document.getElementById('cf-message').value.trim();
+  var errEl   = document.getElementById('contactError');
+
+  if (!fname || !lname || !email || !email.includes('@') || !subject || !message) {
+    errEl.textContent = '\u26A0 Please fill in all required fields.';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  var btn      = this.querySelector('button[type="submit"]');
+  var origHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<svg style="animation:spin .65s linear infinite;width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Sending\u2026';
+
+  try {
+    var resp = await fetch(BACKEND_URL + '/api/contact', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ first_name:fname, last_name:lname, email:email, role:role, subject:subject, message:message })
+    });
+    var data = await resp.json();
+
+    if (resp.ok) {
+      document.getElementById('contactForm').style.display = 'none';
+      var box = document.getElementById('contactSuccess');
+      box.querySelector('p').innerHTML = 'Thank you for reaching out. We\u2019ll respond to your email within two business days.<br><span style="font-family:monospace;background:#D1FAE5;color:#065F46;padding:.3rem .75rem;border-radius:6px;font-size:.85rem;font-weight:700;display:inline-block;margin-top:.5rem">Ref: ' + data.ref + '</span>';
+      box.style.display = 'block';
+    } else {
+      errEl.textContent = '\u26A0 ' + (data.error || 'Submission failed. Please try again.');
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.innerHTML = origHTML;
+    }
+  } catch(err) {
+    errEl.textContent = '\u26A0 Network error \u2014 please check your connection and try again.';
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.innerHTML = origHTML;
+  }
+});
+
+/* ── FAQ accordion ─────────────────────────────── */
+document.querySelectorAll('.faq-toggle').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var body   = this.nextElementSibling;
+    var isOpen = this.getAttribute('aria-expanded') === 'true';
+    var arrow  = this.querySelector('.arrow');
+    document.querySelectorAll('.faq-toggle').forEach(function(other) {
+      if (other !== btn) {
+        other.setAttribute('aria-expanded', 'false');
+        other.nextElementSibling.hidden = true;
+        var a = other.querySelector('.arrow'); if (a) a.textContent = '\u25BE';
+      }
+    });
+    if (isOpen) {
+      this.setAttribute('aria-expanded', 'false'); body.hidden = true;
+      if (arrow) arrow.textContent = '\u25BE';
+    } else {
+      this.setAttribute('aria-expanded', 'true'); body.hidden = false;
+      if (arrow) arrow.textContent = '\u25B4';
+    }
+  });
+});
+</script>
+<style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+<script src="shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Environment (NEVER commit this)
+.env
+
+# Runtime data
+uploads/
+/tmp/
+data/
+logs/
+*.db
+*.db-shm
+*.db-wal
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
