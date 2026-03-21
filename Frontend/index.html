@@ -1,1 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VUU Writing Center</title>
+</head>
+<body>
+  <h1>VUU Writing Center</h1>
+  <button id="loadBtn">Load Drafts</button>
+  <ul id="draftList"></ul>
 
+  <script>
+    const BACKEND = 'https://YOUR-BACKEND.onrender.com';
+
+    document.getElementById('loadBtn').addEventListener('click', async () => {
+      const list = document.getElementById('draftList');
+      list.innerHTML = 'Loading...';
+      try {
+        const res = await fetch(BACKEND + '/api/drafts');
+        const drafts = await res.json();
+        if (!drafts.length) {
+          list.innerHTML = '<li>No drafts found.</li>';
+          return;
+        }
+        list.innerHTML = drafts.map(d => `<li>${JSON.stringify(d)}</li>`).join('');
+      } catch (err) {
+        list.innerHTML = '<li>Error: ' + err.message + '</li>';
+      }
+    });
+  </script>
+</body>
+</html>
