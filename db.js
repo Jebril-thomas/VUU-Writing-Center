@@ -1,11 +1,9 @@
 /**
- * db.js — VUU Writing Center
- * Opens (or creates) the SQLite database and returns the instance.
+ * db.js — VUU Writing Center.
  */
 
 const path   = require('path');
 const fs     = require('fs');
-const Database = require('better-sqlite3');
 
 let _db = null;
 
