@@ -11,7 +11,7 @@ const cors        = require('cors');
 const rateLimit   = require('express-rate-limit');
 const path        = require('path');
 
-const { getDb }   = require('./db');
+const pool   = require('./db');
 const setup       = require('./setup');
 const draftsRouter  = require('./routes/drafts');
 const contactRouter = require('./routes/contact');
