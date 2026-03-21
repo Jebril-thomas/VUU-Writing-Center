@@ -18,7 +18,6 @@ const contactRouter = require('./routes/contact');
 const adminRouter   = require('./routes/admin');
 
 // ── Init DB ─────────────────────────────────────────────────
-const db = getDb();
 setup(db);
 
 // ── App ──────────────────────────────────────────────────────
