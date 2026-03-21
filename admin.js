@@ -6,7 +6,7 @@
 (function () {
   // ── Configuration ──────────────────────────────────────────
   // Change this to your Render backend URL before deploying
-  const API_BASE = window.VUU_API_BASE || 'https://vuu-writing-center-api.onrender.com';
+  const API_BASE = window.VUU_API_BASE || 'https://vuu-writing-center.onrender.com';
   const SESSION_KEY = 'vuu_admin_token';
 
   // ── DOM refs ────────────────────────────────────────────────
