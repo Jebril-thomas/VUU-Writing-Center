@@ -2,7 +2,7 @@
   "name": "vuu-writing-center-api",
   "version": "1.0.0",
   "description": "VUU Writing Center backend API",
-  "main": "src/server.js",
+  "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
